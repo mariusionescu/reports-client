@@ -1,0 +1,10 @@
+/assets
+tmp
+cache
+sessions
+static/qooxdoo
+*.pyc
+nohup.out
+.idea
+.vagrant
+/src
