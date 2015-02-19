@@ -3,7 +3,24 @@ from httplib import HTTPConnection
 import config
 import json
 import time
+from datetime import datetime
 
+
+class InvalidKey(Exception):
+    pass
+
+
+class InvalidPayload(Exception):
+    pass
+
+
+class GenericReportException(Exception):
+    pass
+
+EXCEPTION_MAP = {
+    'INVALID_KEY': InvalidKey,
+    'INVALID_PAYLOAD': InvalidPayload
+}
 
 class ReportClient(object):
     def __init__(self, key, report_id):
@@ -36,10 +53,21 @@ class ReportClient(object):
         if response_data.get('success'):
             return True
         else:
-            return False
+            error = response_data.get('error')
+            exception = EXCEPTION_MAP.get(error, GenericReportException)
+            raise exception
 
-    def read(self, aggregation=None):
+    def read(self, aggregation=None, start_date=None, end_date=None):
         data = self.data.copy()
+
+        if start_date:
+            start_date = (start_date - datetime(1970, 1, 1)).total_seconds()
+            data['start_date'] = start_date
+
+        if end_date:
+            end_date = (end_date - datetime(1970, 1, 1)).total_seconds()
+            data['end_date'] = end_date
+
         if aggregation:
             data['aggregation'] = aggregation
 
@@ -55,7 +83,9 @@ class ReportClient(object):
         if response_data.get('success'):
             return response_data.get('data')
         else:
-            return False
+            error = response_data.get('error')
+            exception = EXCEPTION_MAP.get(error, GenericReportException)
+            raise exception
 
     def delete(self):
         data = self.data.copy()
@@ -70,4 +100,6 @@ class ReportClient(object):
         if response_data.get('success'):
             return True
         else:
-            return False
+            error = response_data.get('error')
+            exception = EXCEPTION_MAP.get(error, GenericReportException)
+            raise exception
