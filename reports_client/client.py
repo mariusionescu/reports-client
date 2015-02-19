@@ -2,6 +2,7 @@ from urlparse import urlparse
 from httplib import HTTPConnection
 import config
 import json
+import time
 
 
 class ReportClient(object):
@@ -18,6 +19,7 @@ class ReportClient(object):
     def push(self, rows, index=None):
         data = self.data.copy()
         data['rows'] = rows
+        data['timestamp'] = time.time()
 
         if index:
             data['index'] = index
