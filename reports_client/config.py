@@ -1,2 +1,2 @@
 
-REPORTS_API = 'http://reports/api/v1/report/'
+REPORTS_API = 'http://reports.appixio.com/api/v1/report/'
