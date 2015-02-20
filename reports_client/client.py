@@ -14,13 +14,19 @@ class InvalidPayload(Exception):
     pass
 
 
+class InvalidSchema(Exception):
+    pass
+
+
 class GenericReportException(Exception):
     pass
 
 EXCEPTION_MAP = {
     'INVALID_KEY': InvalidKey,
-    'INVALID_PAYLOAD': InvalidPayload
+    'INVALID_PAYLOAD': InvalidPayload,
+    'INVALID_SCHEMA': InvalidSchema
 }
+
 
 class ReportClient(object):
     def __init__(self, key, report_id):
