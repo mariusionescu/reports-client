@@ -64,8 +64,9 @@ class ReportClient(object):
             return True
         else:
             error = response_data.get('error')
+            message = response_data.get('message', "That's all")
             exception = EXCEPTION_MAP.get(error, GenericReportException)
-            raise exception
+            raise exception(message)
 
     def read(self, aggregation=None, start_date=None, end_date=None):
         data = self.data.copy()
