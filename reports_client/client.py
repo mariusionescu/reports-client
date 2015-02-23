@@ -18,13 +18,18 @@ class InvalidSchema(Exception):
     pass
 
 
+class EmptyDB(Exception):
+    pass
+
+
 class GenericReportException(Exception):
     pass
 
 EXCEPTION_MAP = {
     'INVALID_KEY': InvalidKey,
     'INVALID_PAYLOAD': InvalidPayload,
-    'INVALID_SCHEMA': InvalidSchema
+    'INVALID_SCHEMA': InvalidSchema,
+    'EMPTY_DB': EmptyDB
 }
 
 
@@ -95,8 +100,9 @@ class ReportClient(object):
             return response_data.get('data')
         else:
             error = response_data.get('error')
+            message = response_data.get('message', "That's all")
             exception = EXCEPTION_MAP.get(error, GenericReportException)
-            raise exception
+            raise exception(message)
 
     def delete(self):
         data = self.data.copy()
